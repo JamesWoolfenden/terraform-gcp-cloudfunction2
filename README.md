@@ -24,7 +24,7 @@ module cloudfunction2 {
     lambda        = var.lambda
     project       = var.project
     region        = var.region
-    sourcezippath = var.sourcezippath
+    source_zip_path = var.source_zip_path
 }
 ```
 
@@ -66,7 +66,7 @@ No modules.
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
-| <a name="input_sourcezippath"></a> [sourcezippath](#input\_sourcezippath) | n/a | `string` | n/a | yes |
+| <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/SAN_FRANCISCO"` | no |
 
 ## Outputs

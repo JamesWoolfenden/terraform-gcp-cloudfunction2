@@ -8,7 +8,7 @@ variable "project" {
   type = string
 }
 
-variable "sourcezippath" {
+variable "source_zip_path" {
   type = string
 }
 
