@@ -5,3 +5,11 @@ output "function" {
 output "bucket" {
   value = google_storage_bucket.bucket
 }
+
+output "files" {
+  value = google_storage_bucket_object.archive
+}
+
+output "job" {
+  value = google_cloud_scheduler_job.invoke_cloud_function
+}

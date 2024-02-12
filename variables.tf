@@ -9,7 +9,7 @@ variable "project" {
 }
 
 variable "sourcezippath" {
-  type        = string
+  type = string
 }
 
 variable "job_name" {
@@ -23,6 +23,11 @@ variable "schedule" {
 }
 
 variable "function_name" {
+  type    = string
+}
+
+
+variable "time_zone" {
   type = string
-  default = "btdelete"
+  default="America/SAN_FRANCISCO"
 }
