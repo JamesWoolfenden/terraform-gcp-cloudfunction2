@@ -39,7 +39,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.15.0 |
 
 ## Modules
 
@@ -49,8 +49,11 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_cloudfunction2s_function.lambda](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunction2s_function) | resource |
-| [google_cloudfunction2s_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunction2s_function_iam_member) | resource |
+| [google_cloud_run_service_iam_member.cloud_run_invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service_iam_member) | resource |
+| [google_cloud_scheduler_job.invoke_cloud_function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job) | resource |
+| [google_cloudfunctions2_function.function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function) | resource |
+| [google_cloudfunctions2_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_member) | resource |
+| [google_service_account.account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_storage_bucket.bucket](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
 
@@ -58,20 +61,22 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | This is to help you add tags to your cloud objects | `map(any)` | n/a | yes |
-| <a name="input_invoker"></a> [invoker](#input\_invoker) | Set who can invoke the lambda | `any` | n/a | yes |
-| <a name="input_lambda"></a> [lambda](#input\_lambda) | A map object that populates the majority of cloudfunction2 settings | `map(any)` | n/a | yes |
-| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | `"eu"` | no |
-| <a name="input_project"></a> [project](#input\_project) | GCP project | `string` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | GCP region | `string` | n/a | yes |
-| <a name="input_sourcezippath"></a> [sourcezippath](#input\_sourcezippath) | Full path to source zip file | `string` | n/a | yes |
+| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
+| <a name="input_job_name"></a> [job\_name](#input\_job\_name) | n/a | `string` | `"invoke-btdelete"` | no |
+| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
+| <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
+| <a name="input_sourcezippath"></a> [sourcezippath](#input\_sourcezippath) | n/a | `string` | n/a | yes |
+| <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/SAN_FRANCISCO"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
+| <a name="output_files"></a> [files](#output\_files) | n/a |
 | <a name="output_function"></a> [function](#output\_function) | n/a |
+| <a name="output_job"></a> [job](#output\_job) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Role and Permissions
@@ -87,14 +92,15 @@ resource "google_project_iam_custom_role" "terraform_pike" {
   title       = "terraform_pike"
   description = "A user with least privileges"
   permissions = [
-    "cloudfunction2s.functions.create",
-    "cloudfunction2s.functions.delete",
-    "cloudfunction2s.functions.get",
-    "cloudfunction2s.functions.getIamPolicy",
-    "cloudfunction2s.functions.setIamPolicy",
-    "cloudfunction2s.functions.update",
-    "cloudfunction2s.operations.get",
-    "iam.serviceAccounts.actAs",
+    "cloudscheduler.jobs.create",
+    "cloudscheduler.jobs.delete",
+    "cloudscheduler.jobs.enable",
+    "cloudscheduler.jobs.get",
+    "cloudscheduler.jobs.update",
+    "iam.serviceAccounts.create",
+    "iam.serviceAccounts.delete",
+    "iam.serviceAccounts.get",
+    "iam.serviceAccounts.update",
     "storage.buckets.create",
     "storage.buckets.delete",
     "storage.buckets.get",

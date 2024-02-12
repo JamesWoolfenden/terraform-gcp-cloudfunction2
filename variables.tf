@@ -23,11 +23,11 @@ variable "schedule" {
 }
 
 variable "function_name" {
-  type    = string
+  type = string
 }
 
 
 variable "time_zone" {
-  type = string
-  default="America/SAN_FRANCISCO"
+  type    = string
+  default = "America/SAN_FRANCISCO"
 }
