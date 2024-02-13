@@ -1,3 +1,4 @@
 output "function" {
-  value = module.function2
+  value     = module.function2
+  sensitive = true
 }

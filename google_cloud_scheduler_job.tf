@@ -7,7 +7,8 @@ resource "google_cloud_scheduler_job" "invoke_cloud_function" {
   region      = google_cloudfunctions2_function.function.location
 
   http_target {
-    uri         = google_cloudfunctions2_function.function.service_config[0].uri
+    body        = var.body
+    uri         = google_cloudfunctions2_function.function.url
     http_method = "POST"
     oidc_token {
       audience              = "${google_cloudfunctions2_function.function.service_config[0].uri}/"

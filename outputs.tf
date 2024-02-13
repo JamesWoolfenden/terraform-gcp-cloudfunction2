@@ -13,3 +13,7 @@ output "files" {
 output "job" {
   value = google_cloud_scheduler_job.invoke_cloud_function
 }
+
+output "auth" {
+  value = google_cloudfunctions2_function_iam_member.invoker
+}

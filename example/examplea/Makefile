@@ -18,7 +18,7 @@ init:
 	terraform init -reconfigure -upgrade
 
 plan:
-	terraform plan --out tfplan.binary -refresh=true
+	terraform plan -refresh=true
 
 planned: init
 	terraform plan -out tf.plan
@@ -32,9 +32,6 @@ apply: build
 
 build:
 	terraform apply -auto-approve
-
-convert:
-	terraform show -json tfplan.binary > tfplan.json
 
 check: init
 	terraform plan -detailed-exitcode

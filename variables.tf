@@ -29,5 +29,17 @@ variable "function_name" {
 
 variable "time_zone" {
   type    = string
-  default = "America/SAN_FRANCISCO"
+  default = "America/Los_Angeles"
+}
+
+variable "key_id" {
+  type = string
+}
+
+variable "env_vars" {
+  type = map(any)
+}
+
+variable "body" {
+  type = string
 }
