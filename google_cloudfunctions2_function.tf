@@ -5,7 +5,7 @@ resource "google_cloudfunctions2_function" "function" {
 
   build_config {
     runtime     = "go121"
-    entry_point = "HelloHTTP" # Set the entry point
+    entry_point = var.entry_point
     source {
       storage_source {
         bucket = google_storage_bucket.bucket.name
@@ -13,9 +13,6 @@ resource "google_cloudfunctions2_function" "function" {
       }
     }
   }
-
-
-
 
   service_config {
     min_instance_count    = 1
@@ -33,4 +30,9 @@ resource "google_kms_crypto_key_iam_member" "crypto_key" {
   crypto_key_id = var.key_id
   role          = "roles/cloudkms.cryptoKeyEncrypter"
   member        = "serviceAccount:service-${data.google_project.project.number}@gcf-admin-robot.iam.gserviceaccount.com"
+}
+
+
+variable "entry_point" {
+  type = string
 }

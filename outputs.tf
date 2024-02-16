@@ -17,3 +17,7 @@ output "job" {
 output "auth" {
   value = google_cloudfunctions2_function_iam_member.invoker
 }
+
+output "account" {
+  value = google_service_account.account
+}

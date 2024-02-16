@@ -40,6 +40,7 @@ No requirements.
 | Name | Version |
 |------|---------|
 | <a name="provider_google"></a> [google](#provider\_google) | 5.16.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
 
 ## Modules
 
@@ -57,6 +58,7 @@ No modules.
 | [google_service_account.account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_storage_bucket.bucket](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
+| [random_string.name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
 
 ## Inputs
@@ -64,12 +66,14 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_body"></a> [body](#input\_body) | n/a | `string` | n/a | yes |
+| <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | n/a | `string` | n/a | yes |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | n/a | `map(any)` | n/a | yes |
 | <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
 | <a name="input_job_name"></a> [job\_name](#input\_job\_name) | n/a | `string` | `"invoke-btdelete"` | no |
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | n/a | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
+| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br>    max_backoff_duration = string<br>    max_doublings        = number<br>    max_retry_duration   = string<br>    min_backoff_duration = string<br>    retry_count          = number<br>  })</pre> | <pre>{<br>  "max_backoff_duration": "3600s",<br>  "max_doublings": 5,<br>  "max_retry_duration": "0s",<br>  "min_backoff_duration": "5s",<br>  "retry_count": 0<br>}</pre> | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/Los_Angeles"` | no |
@@ -78,6 +82,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_account"></a> [account](#output\_account) | n/a |
 | <a name="output_auth"></a> [auth](#output\_auth) | n/a |
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
 | <a name="output_files"></a> [files](#output\_files) | n/a |

@@ -15,4 +15,12 @@ resource "google_cloud_scheduler_job" "invoke_cloud_function" {
       service_account_email = google_service_account.account.email
     }
   }
+
+  retry_config {
+    max_backoff_duration = var.retry_config.max_backoff_duration
+    max_doublings        = var.retry_config.max_doublings
+    max_retry_duration   = var.retry_config.max_retry_duration
+    min_backoff_duration = var.retry_config.min_backoff_duration
+    retry_count          = var.retry_config.retry_count
+  }
 }

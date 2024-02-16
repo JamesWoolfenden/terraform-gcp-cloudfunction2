@@ -43,3 +43,22 @@ variable "env_vars" {
 variable "body" {
   type = string
 }
+
+
+variable "retry_config" {
+  type = object({
+    max_backoff_duration = string
+    max_doublings        = number
+    max_retry_duration   = string
+    min_backoff_duration = string
+    retry_count          = number
+  })
+
+  default = {
+    max_backoff_duration = "3600s"
+    max_doublings        = 5
+    max_retry_duration   = "0s"
+    min_backoff_duration = "5s"
+    retry_count          = 0
+  }
+}

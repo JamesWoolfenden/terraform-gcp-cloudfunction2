@@ -5,14 +5,19 @@ module "function2" {
   source_zip_path = data.archive_file.golang.output_path
   schedule        = "0 0 1 * *" # MONTHLY
   function_name   = "btdelete"
-  key_id          = "projects/pangpt/locations/us-central1/keyRings/pangpt_kms_key_ring/cryptoKeys/pangpt_kms_crypto"
-  env_vars = {
-    "InstanceID" = "pangpt"
-    "TableID"    = "pangpt"
-  }
-  body = base64encode(jsonencode({ "name" : "Hello World" }))
+  entry_point     = "btDeleter" # Set the entry point
+  key_id          = "projects/${data.google_project.project.project_id}/locations/us-central1/keyRings/pangpt_kms_key_ring/cryptoKeys/pangpt_kms_crypto"
+  env_vars        = {}
+  body            = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
 }
 
 
 data "google_project" "project" {
+}
+
+
+resource "google_bigtable_instance_iam_member" "reader" {
+  instance = "pangpt"
+  role     = "roles/bigtable.user"
+  member   = "serviceAccount:${module.function2.account.email}"
 }
