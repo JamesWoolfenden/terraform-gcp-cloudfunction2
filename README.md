@@ -54,7 +54,6 @@ No modules.
 | [google_cloud_scheduler_job.invoke_cloud_function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job) | resource |
 | [google_cloudfunctions2_function.function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function) | resource |
 | [google_cloudfunctions2_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_member) | resource |
-| [google_service_account.account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
 | [random_string.name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
@@ -74,6 +73,7 @@ No modules.
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br>    max_backoff_duration = string<br>    max_doublings        = number<br>    max_retry_duration   = string<br>    min_backoff_duration = string<br>    retry_count          = number<br>  })</pre> | <pre>{<br>  "max_backoff_duration": "3600s",<br>  "max_doublings": 5,<br>  "max_retry_duration": "0s",<br>  "min_backoff_duration": "5s",<br>  "retry_count": 0<br>}</pre> | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
+| <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | n/a | `string` | n/a | yes |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/Los_Angeles"` | no |
 
@@ -107,10 +107,6 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "cloudscheduler.jobs.enable",
     "cloudscheduler.jobs.get",
     "cloudscheduler.jobs.update",
-    "iam.serviceAccounts.create",
-    "iam.serviceAccounts.delete",
-    "iam.serviceAccounts.get",
-    "iam.serviceAccounts.update",
     "resourcemanager.projects.get",
     "storage.objects.create",
     "storage.objects.delete",
