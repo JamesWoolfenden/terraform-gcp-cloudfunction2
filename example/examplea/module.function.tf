@@ -9,6 +9,7 @@ module "function2" {
   key_id          = "projects/${data.google_project.project.project_id}/locations/us-central1/keyRings/pangpt_kms_key_ring/cryptoKeys/pangpt_kms_crypto"
   env_vars        = {}
   body            = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
+  bucketname      = google_storage_bucket.bucket.name
 }
 
 

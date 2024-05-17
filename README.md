@@ -39,8 +39,8 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.16.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.29.1 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.1 |
 
 ## Modules
 
@@ -56,7 +56,6 @@ No modules.
 | [google_cloudfunctions2_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_member) | resource |
 | [google_kms_crypto_key_iam_member.crypto_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_crypto_key_iam_member) | resource |
 | [google_service_account.account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
-| [google_storage_bucket.bucket](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
 | [random_string.name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
@@ -66,6 +65,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_body"></a> [body](#input\_body) | n/a | `string` | n/a | yes |
+| <a name="input_bucketname"></a> [bucketname](#input\_bucketname) | n/a | `string` | n/a | yes |
 | <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | n/a | `string` | n/a | yes |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | n/a | `map(any)` | n/a | yes |
 | <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
@@ -115,10 +115,6 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "iam.serviceAccounts.get",
     "iam.serviceAccounts.update",
     "resourcemanager.projects.get",
-    "storage.buckets.create",
-    "storage.buckets.delete",
-    "storage.buckets.get",
-    "storage.buckets.update",
     "storage.objects.create",
     "storage.objects.delete",
     "storage.objects.get"

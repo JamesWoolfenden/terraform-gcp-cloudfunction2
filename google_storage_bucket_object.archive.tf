@@ -1,6 +1,6 @@
 resource "google_storage_bucket_object" "archive" {
   name   = "${var.function_name}-${random_string.name.result}.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = var.bucketname
   source = var.source_zip_path
 }
 

@@ -62,3 +62,7 @@ variable "retry_config" {
     retry_count          = 0
   }
 }
+
+variable "bucketname" {
+  type = string
+}

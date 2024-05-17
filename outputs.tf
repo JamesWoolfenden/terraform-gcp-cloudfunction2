@@ -3,7 +3,7 @@ output "function" {
 }
 
 output "bucket" {
-  value = google_storage_bucket.bucket
+  value = var.bucketname
 }
 
 output "files" {

@@ -8,7 +8,7 @@ resource "google_cloudfunctions2_function" "function" {
     entry_point = var.entry_point
     source {
       storage_source {
-        bucket = google_storage_bucket.bucket.name
+        bucket = var.bucketname
         object = google_storage_bucket_object.archive.name
       }
     }
