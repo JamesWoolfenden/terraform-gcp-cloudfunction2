@@ -26,11 +26,7 @@ resource "google_cloudfunctions2_function" "function" {
 data "google_project" "project" {
 }
 
-resource "google_kms_crypto_key_iam_member" "crypto_key" {
-  crypto_key_id = var.key_id
-  role          = "roles/cloudkms.cryptoKeyEncrypter"
-  member        = "serviceAccount:service-${data.google_project.project.number}@gcf-admin-robot.iam.gserviceaccount.com"
-}
+
 
 
 variable "entry_point" {
