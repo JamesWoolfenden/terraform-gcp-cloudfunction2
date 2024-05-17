@@ -18,15 +18,13 @@ resource "google_cloudfunctions2_function" "function" {
     min_instance_count    = 1
     available_memory      = "256M"
     timeout_seconds       = 60
-    service_account_email = google_service_account.account.email
+    service_account_email = var.serviceaccount_email
     environment_variables = var.env_vars
   }
 }
 
 data "google_project" "project" {
 }
-
-
 
 
 variable "entry_point" {

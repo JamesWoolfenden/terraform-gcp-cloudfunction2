@@ -3,5 +3,5 @@ resource "google_cloud_run_service_iam_member" "invoker" {
   location = google_cloudfunctions2_function.function.location
   service  = google_cloudfunctions2_function.function.name
   role     = "roles/run.invoker"
-  member   = "serviceAccount:${google_service_account.account.email}"
+  member   = "serviceAccount:${var.serviceaccount_email}"
 }

@@ -66,3 +66,7 @@ variable "retry_config" {
 variable "bucketname" {
   type = string
 }
+
+variable "serviceaccount_email" {
+  type = string
+}

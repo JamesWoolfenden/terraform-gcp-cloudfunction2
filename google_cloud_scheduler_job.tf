@@ -12,7 +12,7 @@ resource "google_cloud_scheduler_job" "invoke_cloud_function" {
     http_method = "POST"
     oidc_token {
       audience              = "${google_cloudfunctions2_function.function.service_config[0].uri}/"
-      service_account_email = google_service_account.account.email
+      service_account_email = var.serviceaccount_email
     }
   }
 

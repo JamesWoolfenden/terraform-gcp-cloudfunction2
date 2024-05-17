@@ -10,6 +10,7 @@ module "function2" {
   env_vars        = {}
   body            = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
   bucketname      = google_storage_bucket.bucket.name
+  serviceaccount_email = google_service_account.account.email
 }
 
 
@@ -20,5 +21,5 @@ data "google_project" "project" {
 resource "google_bigtable_instance_iam_member" "reader" {
   instance = "pangpt"
   role     = "roles/bigtable.user"
-  member   = "serviceAccount:${module.function2.account.email}"
+  member   = "serviceAccount:${google_service_account.account.email}"
 }
