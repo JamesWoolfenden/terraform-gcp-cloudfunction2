@@ -18,13 +18,6 @@ data "google_project" "project" {
   project_id = "pike-412922"
 }
 
-
-# resource "google_bigtable_instance_iam_member" "reader" {
-#   instance = "pangpt"
-#   role     = "roles/bigtable.user"
-#   member   = "serviceAccount:${google_service_account.account.email}"
-# }
-
 resource "google_kms_key_ring" "pike" {
   location = "europe-west2"
   name     = "pike-uk"
@@ -32,7 +25,6 @@ resource "google_kms_key_ring" "pike" {
 
 resource "google_kms_crypto_key" "pike" {
   #checkov:skip=CKV_GCP_82:testdata
-
   key_ring        = google_kms_key_ring.pike.id
   name            = "pike"
   rotation_period = "7776000s"
