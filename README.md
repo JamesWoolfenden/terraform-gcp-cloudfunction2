@@ -39,8 +39,8 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | n/a |
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+| <a name="provider_google"></a> [google](#provider\_google) | 6.40.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
 
@@ -71,7 +71,8 @@ No modules.
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | n/a | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
-| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br>    max_backoff_duration = string<br>    max_doublings        = number<br>    max_retry_duration   = string<br>    min_backoff_duration = string<br>    retry_count          = number<br>  })</pre> | <pre>{<br>  "max_backoff_duration": "3600s",<br>  "max_doublings": 5,<br>  "max_retry_duration": "0s",<br>  "min_backoff_duration": "5s",<br>  "retry_count": 0<br>}</pre> | no |
+| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
+| <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"go122"` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
 | <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | n/a | `string` | n/a | yes |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
@@ -108,6 +109,8 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "cloudscheduler.jobs.get",
     "cloudscheduler.jobs.update",
     "resourcemanager.projects.get",
+    "run.services.getIamPolicy",
+    "run.services.setIamPolicy",
     "storage.objects.create",
     "storage.objects.delete",
     "storage.objects.get"

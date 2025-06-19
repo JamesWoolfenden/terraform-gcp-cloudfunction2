@@ -1,10 +1,13 @@
 resource "google_cloudfunctions2_function" "function" {
+  #checkov:skip=CKV_GCP_124:testdata
+
   name        = var.function_name
   location    = var.location
+  project     = var.project
   description = "a new function"
 
   build_config {
-    runtime     = "go121"
+    runtime     = var.runtime
     entry_point = var.entry_point
     source {
       storage_source {
@@ -21,12 +24,4 @@ resource "google_cloudfunctions2_function" "function" {
     service_account_email = var.serviceaccount_email
     environment_variables = var.env_vars
   }
-}
-
-data "google_project" "project" {
-}
-
-
-variable "entry_point" {
-  type = string
 }

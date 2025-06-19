@@ -1,7 +1,7 @@
 module "function2" {
   source               = "../../"
   location             = "us-central1"
-  project              = data.google_project.project.name
+  project              = data.google_project.project.project_id
   source_zip_path      = data.archive_file.golang.output_path
   schedule             = "0 0 1 * *" # MONTHLY
   function_name        = "btdelete"
@@ -15,11 +15,25 @@ module "function2" {
 
 
 data "google_project" "project" {
+  project_id = "pike-412922"
 }
 
 
-resource "google_bigtable_instance_iam_member" "reader" {
-  instance = "pangpt"
-  role     = "roles/bigtable.user"
-  member   = "serviceAccount:${google_service_account.account.email}"
+# resource "google_bigtable_instance_iam_member" "reader" {
+#   instance = "pangpt"
+#   role     = "roles/bigtable.user"
+#   member   = "serviceAccount:${google_service_account.account.email}"
+# }
+
+resource "google_kms_key_ring" "pike" {
+  location = "europe-west2"
+  name     = "pike-uk"
+}
+
+resource "google_kms_crypto_key" "pike" {
+  #checkov:skip=CKV_GCP_82:testdata
+
+  key_ring        = google_kms_key_ring.pike.id
+  name            = "pike"
+  rotation_period = "7776000s"
 }

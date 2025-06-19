@@ -15,35 +15,35 @@ all: init plan build
 
 init:
 	$(RM)
-	terraform init -reconfigure -upgrade
+	tofu init -reconfigure -upgrade
 
 plan:
-	terraform plan -refresh=true
+	tofu plan -refresh=true
 
 planned: init
-	terraform plan -out tf.plan
-	terraform show -json tf.plan  > tf.json
+	tofu plan -out tf.plan
+	tofu show -json tf.plan  > tf.json
 	checkov -f tf.json
 
 p:
-	terraform plan -refresh=true
+	tofu plan -refresh=true
 
 apply: build
 
 build:
-	terraform apply -auto-approve
+	tofu apply -auto-approve
 
 check: init
-	terraform plan -detailed-exitcode
+	tofu plan -detailed-exitcode
 
 destroy: init
-	terraform destroy -auto-approve
+	tofu destroy -auto-approve
 
 docs:
 	terraform-docs md . > README.md
 
 valid:
-	-terraform fmt -recursive
+	-tofu fmt -recursive
 	-checkov -d . --external-checks-dir ../../checkov
 	-terrascan scan
 	docker pull checkmarx/kics:latest
@@ -64,7 +64,7 @@ opa: plan convert
 
 target:
 	@read -p "Enter Module to target:" MODULE;
-	terraform apply -target $$MODULE
+	tofu apply -target $$MODULE
 
 purge:
 	$(BLAT)

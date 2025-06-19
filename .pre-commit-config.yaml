@@ -4,7 +4,7 @@ default_language_version:
   python: python3.11
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -17,7 +17,7 @@ repos:
           - --autofix
       - id: detect-private-key
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.4
+    rev: v1.5.5
     hooks:
       - id: forbid-tabs
         exclude_types: [python, javascript, dtd, markdown, makefile, xml, go]
@@ -28,7 +28,7 @@ repos:
       - id: shell-lint
         exclude: template|\.template$
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.38.0
+    rev: v0.45.0
     hooks:
       - id: markdownlint
   - repo: https://github.com/jameswoolfenden/pre-commit
@@ -39,19 +39,19 @@ repos:
       - id: tf2docs
         language_version: python3.11
   - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.1.70
+    rev: 3.2.443
     hooks:
       - id: checkov
         files: .
         verbose: true
         entry: checkov -d example/examplea --external-checks-dir checkov --download-external-modules true --compact
   - repo: https://github.com/jameswoolfenden/pike
-    rev: v0.3.4
+    rev: v0.3.58
     hooks:
       - id: pike-docs-go
         args: ["readme","-d", ".", "-i"]
   - repo: https://github.com/jameswoolfenden/ghat
-    rev: v0.1.3
+    rev: v0.1.13
     hooks:
       - id: ghat-go
         args: ["swot","-d", "."]

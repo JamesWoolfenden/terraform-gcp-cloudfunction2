@@ -70,3 +70,11 @@ variable "bucketname" {
 variable "serviceaccount_email" {
   type = string
 }
+variable "entry_point" {
+  type = string
+}
+
+variable "runtime" {
+  type    = string
+  default = "go122"
+}
