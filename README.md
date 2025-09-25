@@ -39,7 +39,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 6.40.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 7.4.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
@@ -74,6 +74,7 @@ No modules.
 | <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"go122"` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
+| <a name="input_secrets"></a> [secrets](#input\_secrets) | n/a | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | n/a | `string` | n/a | yes |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/Los_Angeles"` | no |
@@ -98,11 +99,18 @@ The Terraform resource required is:
 ```golang
 
 resource "google_project_iam_custom_role" "terraform_pike" {
-  project     = "pike"
+  project     = "pike-412922"
   role_id     = "terraform_pike"
   title       = "terraform_pike"
   description = "A user with least privileges"
   permissions = [
+    "cloudfunctions.functions.create",
+    "cloudfunctions.functions.delete",
+    "cloudfunctions.functions.get",
+    "cloudfunctions.functions.getIamPolicy",
+    "cloudfunctions.functions.setIamPolicy",
+    "cloudfunctions.functions.update",
+    "cloudfunctions.operations.get",
     "cloudscheduler.jobs.create",
     "cloudscheduler.jobs.delete",
     "cloudscheduler.jobs.enable",
@@ -113,7 +121,8 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "run.services.setIamPolicy",
     "storage.objects.create",
     "storage.objects.delete",
-    "storage.objects.get"
+    "storage.objects.get",
+    "storage.objects.list"
   ]
 }
 

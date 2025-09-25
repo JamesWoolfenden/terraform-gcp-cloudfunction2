@@ -78,3 +78,12 @@ variable "runtime" {
   type    = string
   default = "go122"
 }
+
+variable "secrets" {
+  type = list(object({
+    key     = string
+    secret  = string
+    version = string
+  }))
+  default = []
+}

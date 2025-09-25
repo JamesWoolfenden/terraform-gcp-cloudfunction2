@@ -11,6 +11,11 @@ module "function2" {
   body                 = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
   bucketname           = google_storage_bucket.bucket.name
   serviceaccount_email = google_service_account.account.email
+  secrets = [{
+    "key"     = "NAME"
+    "secret"  = "PASSWORD"
+    "version" = "latest"
+  }]
 }
 
 

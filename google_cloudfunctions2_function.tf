@@ -23,5 +23,15 @@ resource "google_cloudfunctions2_function" "function" {
     timeout_seconds       = 60
     service_account_email = var.serviceaccount_email
     environment_variables = var.env_vars
+
+    dynamic "secret_environment_variables" {
+      for_each = var.secrets
+      content {
+        key        = secret_environment_variables.value["key"]
+        project_id = var.project
+        secret     = secret_environment_variables.value["secret"]
+        version    = secret_environment_variables.value["version"]
+      }
+    }
   }
 }

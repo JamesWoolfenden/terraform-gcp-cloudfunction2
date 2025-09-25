@@ -4,7 +4,7 @@ default_language_version:
   python: python3.11
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -39,14 +39,14 @@ repos:
       - id: tf2docs
         language_version: python3.11
   - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.2.443
+    rev: 3.2.471
     hooks:
       - id: checkov
         files: .
         verbose: true
         entry: checkov -d example/examplea --external-checks-dir checkov --download-external-modules true --compact
   - repo: https://github.com/jameswoolfenden/pike
-    rev: v0.3.58
+    rev: v0.3.79
     hooks:
       - id: pike-docs-go
         args: ["readme","-d", ".", "-i"]
