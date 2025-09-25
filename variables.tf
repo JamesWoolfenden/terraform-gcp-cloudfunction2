@@ -87,3 +87,24 @@ variable "secrets" {
   }))
   default = []
 }
+
+
+variable "min_instance_count" {
+  type    = number
+  default = 1
+}
+
+variable "available_memory" {
+  type    = string
+  default = "256M"
+}
+
+variable "timeout_seconds" {
+  type    = number
+  default = 60
+}
+
+variable "max_instance_count" {
+  type    = number
+  default = 1
+}

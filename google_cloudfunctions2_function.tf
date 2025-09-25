@@ -18,9 +18,10 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   service_config {
-    min_instance_count    = 1
-    available_memory      = "256M"
-    timeout_seconds       = 60
+    min_instance_count    = var.min_instance_count
+    max_instance_count    = var.max_instance_count
+    available_memory      = var.available_memory
+    timeout_seconds       = var.timeout_seconds
     service_account_email = var.serviceaccount_email
     environment_variables = var.env_vars
 

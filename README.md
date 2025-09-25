@@ -62,6 +62,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_available_memory"></a> [available\_memory](#input\_available\_memory) | n/a | `string` | `"256M"` | no |
 | <a name="input_body"></a> [body](#input\_body) | n/a | `string` | n/a | yes |
 | <a name="input_bucketname"></a> [bucketname](#input\_bucketname) | n/a | `string` | n/a | yes |
 | <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | n/a | `string` | n/a | yes |
@@ -70,6 +71,8 @@ No modules.
 | <a name="input_job_name"></a> [job\_name](#input\_job\_name) | n/a | `string` | `"invoke-btdelete"` | no |
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | n/a | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
+| <a name="input_max_instance_count"></a> [max\_instance\_count](#input\_max\_instance\_count) | n/a | `number` | `1` | no |
+| <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | n/a | `number` | `1` | no |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"go122"` | no |
@@ -78,6 +81,7 @@ No modules.
 | <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | n/a | `string` | n/a | yes |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/Los_Angeles"` | no |
+| <a name="input_timeout_seconds"></a> [timeout\_seconds](#input\_timeout\_seconds) | n/a | `number` | `60` | no |
 
 ## Outputs
 
