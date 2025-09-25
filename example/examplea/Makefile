@@ -71,3 +71,6 @@ purge:
 
 cost:
 	infracost breakdown --path . --usage-file infracost-usage.yml  --sync-usage-file --show-skipped
+
+update:
+	cd code; go get -u
