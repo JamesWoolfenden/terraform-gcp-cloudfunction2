@@ -1,88 +1,15 @@
 ---
-# yamllint disable rule:line-length
 name: Verify
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-permissions: read-all
-env:
-  terraform: 1.3.0
-  tf_target_dir: example/examplea
-  branch: main
-  GITHUB_API_TOKEN: ${{ github.token }}
+
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ${{ env.branch }}
-          token: ${{ github.token }}
-          fetch-depth: '0'
-      - name: Config Terraform plugin cache
-        run: |
-          echo "plugin_cache_dir=$HOME/.terraform.d/plugin-cache" >~/.terraformrc
-          mkdir --parents ~/.terraform.d/plugin-cache
-      - name: Cache Terraform
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
-        with:
-          path: |
-            ~/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: ${{ env.tf_target_dir }}
-      - name: Terraform validate
-        id: validate
-        run: terraform validate
-        working-directory: ${{ env.tf_target_dir }}
-      - name: Terraform plan
-        id: plan
-        run: terraform plan
-        working-directory: ${{ env.tf_target_dir }}
-        env:
-          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_CLOUD_KEYFILE_JSON }}
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ${{ env.branch }}
-          token: ${{ github.token }}
-          fetch-depth: '0'
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
-        with:
-          python-version: 3.11
-      - run: |
-          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-linux-amd64.tar.gz
-          mkdir "$GITHUB_WORKSPACE/bin"
-          tar -xvf terraform-docs*.tar.gz --directory "$GITHUB_WORKSPACE/bin"
-          chmod +x "$GITHUB_WORKSPACE/bin/terraform-docs"
-          wget https://github.com/rhysd/actionlint/releases/download/v1.6.23/actionlint_1.6.23_linux_amd64.tar.gz
-          tar -xvf actionlint_1.6.23_linux_amd64.tar.gz --directory "$GITHUB_WORKSPACE/bin"
-          chmod +x "$GITHUB_WORKSPACE/bin/actionlint"
-          echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
-      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
-  version:
-    permissions: write-all
-    name: versioning
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          fetch-depth: '0'
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@e528bc2b9628971ce0e6f823f3052d1dcd9d512c # 1.73.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: "true"
-    needs: [terraform, security]
+  verify:
+    uses: JamesWoolfenden/.github/.github/workflows/terraform-verify-gcp.yml@main
