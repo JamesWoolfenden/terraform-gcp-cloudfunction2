@@ -21,7 +21,7 @@ repos:
     hooks:
       - id: forbid-tabs
         exclude_types: [python, javascript, dtd, markdown, makefile, xml, go]
-        exclude: binary|\.bin$
+        exclude: binary|\.bin$|example/
   - repo: https://github.com/jameswoolfenden/pre-commit-shell
     rev: 062f0b028ae65827e04f91c1e6738cfcbe9b337f # v1.0.6
     hooks:
