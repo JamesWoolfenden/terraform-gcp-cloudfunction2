@@ -20,7 +20,7 @@ module "function2" {
 
 
 data "google_project" "project" {
-  project_id = "pike-412922"
+  project_id = "pike-477416"
 }
 
 resource "google_kms_key_ring" "pike" {
