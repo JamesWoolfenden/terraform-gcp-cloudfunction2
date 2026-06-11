@@ -1,0 +1,34 @@
+{
+  "findings": [
+    {
+      "confidence": "high",
+      "explanation": "The module call sets key_id to the pre-existing key projects/.../keyRings/pangpt_kms_key_ring/cryptoKeys/pangpt_kms_crypto (in us-central1), but the KMS IAM binding grants the GCF service agent access to google_kms_crypto_key.pike (in europe-west2) \u2014 a completely different key. The service agent cannot access the key the function is actually encrypted with, so deployment will fail. Additionally, the role is roles/cloudkms.cryptoKeyEncrypter (encrypt-only); the GCF service agent requires roles/cloudkms.cryptoKeyEncrypterDecrypter to both encrypt and decrypt function artifacts. Two independent bugs on the same resource, both blocking deployment.",
+      "file": "example/examplea/google_kms_crypto_key_iam_member.tf",
+      "id": "HOLDEN_AI_001",
+      "line": 1,
+      "principle": "encryption",
+      "related_resources": [
+        "google_kms_crypto_key.pike",
+        "module.function2"
+      ],
+      "resource": "google_kms_crypto_key_iam_member.crypto_key",
+      "severity": "HIGH",
+      "title": "KMS IAM grant is on the wrong key and insufficient role \u2014 function deployment will fail"
+    },
+    {
+      "confidence": "high",
+      "explanation": "The service_config block does not set ingress_settings. The Google provider default is ALLOW_ALL, meaning the function URL is reachable from the public internet. HLD_GCP_021 (Cloud Functions must restrict ingress to internal traffic only) passed because the attribute is absent and the engine cannot evaluate a missing field. The function is only invoked by Cloud Scheduler; it should be ALLOW_INTERNAL_ONLY to prevent the endpoint being reachable from arbitrary internet hosts (even though IAM auth is still required, the endpoint surface is unnecessarily exposed).",
+      "file": "google_cloudfunctions2_function.tf",
+      "id": "HOLDEN_AI_002",
+      "line": 22,
+      "principle": "network-security",
+      "related_resources": [],
+      "remediation": "Add ingress_settings = \"ALLOW_INTERNAL_ONLY\" inside the service_config block in google_cloudfunctions2_function.tf.",
+      "resource": "google_cloudfunctions2_function.core",
+      "severity": "MEDIUM",
+      "supersedes": "HLD_GCP_021",
+      "title": "service_config.ingress_settings omitted \u2014 function defaults to ALLOW_ALL, HLD_GCP_021 blind spot"
+    }
+  ],
+  "suggested_policies": []
+}

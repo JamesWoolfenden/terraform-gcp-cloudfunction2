@@ -52,47 +52,47 @@ No modules.
 | ---- | ---- |
 | [google_cloud_run_service_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service_iam_member) | resource |
 | [google_cloud_scheduler_job.invoke_cloud_function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job) | resource |
-| [google_cloudfunctions2_function.function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function) | resource |
+| [google_cloudfunctions2_function.core](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function) | resource |
 | [google_cloudfunctions2_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_member) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
 | [random_string.name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [google_project.project](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_available_memory"></a> [available\_memory](#input\_available\_memory) | n/a | `string` | `"256M"` | no |
-| <a name="input_body"></a> [body](#input\_body) | n/a | `string` | n/a | yes |
-| <a name="input_bucketname"></a> [bucketname](#input\_bucketname) | n/a | `string` | n/a | yes |
-| <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | n/a | `string` | n/a | yes |
-| <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | n/a | `map(any)` | n/a | yes |
-| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | n/a | `string` | n/a | yes |
-| <a name="input_job_name"></a> [job\_name](#input\_job\_name) | n/a | `string` | `"invoke-btdelete"` | no |
-| <a name="input_key_id"></a> [key\_id](#input\_key\_id) | n/a | `string` | n/a | yes |
-| <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
-| <a name="input_max_instance_count"></a> [max\_instance\_count](#input\_max\_instance\_count) | n/a | `number` | `1` | no |
-| <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | n/a | `number` | `1` | no |
-| <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
-| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | n/a | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
-| <a name="input_runtime"></a> [runtime](#input\_runtime) | n/a | `string` | `"go122"` | no |
-| <a name="input_schedule"></a> [schedule](#input\_schedule) | n/a | `string` | `"0 0 * * *"` | no |
-| <a name="input_secrets"></a> [secrets](#input\_secrets) | n/a | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | `[]` | no |
-| <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | n/a | `string` | n/a | yes |
-| <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | n/a | `string` | n/a | yes |
-| <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | n/a | `string` | `"America/Los_Angeles"` | no |
-| <a name="input_timeout_seconds"></a> [timeout\_seconds](#input\_timeout\_seconds) | n/a | `number` | `60` | no |
+| <a name="input_available_memory"></a> [available\_memory](#input\_available\_memory) | Amount of memory allocated to the Cloud Function. | `string` | `"256M"` | no |
+| <a name="input_body"></a> [body](#input\_body) | Request body for the Cloud Function invocation. | `string` | n/a | yes |
+| <a name="input_bucketname"></a> [bucketname](#input\_bucketname) | Name of the storage bucket used by the function. | `string` | n/a | yes |
+| <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | Entry point symbol for the Cloud Function. | `string` | n/a | yes |
+| <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | Environment variables for the Cloud Function. | `map(any)` | n/a | yes |
+| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | Name of the Cloud Function to deploy. | `string` | n/a | yes |
+| <a name="input_job_name"></a> [job\_name](#input\_job\_name) | Name of the scheduled Cloud Scheduler job. | `string` | `"invoke-btdelete"` | no |
+| <a name="input_key_id"></a> [key\_id](#input\_key\_id) | KMS key identifier used for encryption or access. | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | GCP region to deploy resources. | `string` | n/a | yes |
+| <a name="input_max_instance_count"></a> [max\_instance\_count](#input\_max\_instance\_count) | Maximum number of function instances. | `number` | `1` | no |
+| <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | Minimum number of function instances to keep warm. | `number` | `1` | no |
+| <a name="input_project"></a> [project](#input\_project) | GCP project ID. | `string` | n/a | yes |
+| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | Retry configuration for Cloud Scheduler. | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
+| <a name="input_runtime"></a> [runtime](#input\_runtime) | Runtime environment for the Cloud Function. | `string` | `"go122"` | no |
+| <a name="input_schedule"></a> [schedule](#input\_schedule) | Cron schedule for the Cloud Scheduler job. | `string` | `"0 0 * * *"` | no |
+| <a name="input_secrets"></a> [secrets](#input\_secrets) | Secrets to expose to the Cloud Function. | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | Email address of the service account for the function. | `string` | n/a | yes |
+| <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | Local path to the zipped source archive. | `string` | n/a | yes |
+| <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | Time zone for the scheduler. | `string` | `"America/Los_Angeles"` | no |
+| <a name="input_timeout_seconds"></a> [timeout\_seconds](#input\_timeout\_seconds) | Maximum function execution time in seconds. | `number` | `60` | no |
+| <a name="input_vpc_connector"></a> [vpc\_connector](#input\_vpc\_connector) | Name of the VPC connector for the Cloud Function. | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_account"></a> [account](#output\_account) | n/a |
-| <a name="output_auth"></a> [auth](#output\_auth) | n/a |
-| <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
-| <a name="output_files"></a> [files](#output\_files) | n/a |
-| <a name="output_function"></a> [function](#output\_function) | n/a |
-| <a name="output_job"></a> [job](#output\_job) | n/a |
+| <a name="output_account"></a> [account](#output\_account) | The email of the service account used by the Cloud Function. |
+| <a name="output_auth"></a> [auth](#output\_auth) | The IAM member that allows the Cloud Scheduler to invoke the Cloud Function. |
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | The name of the Google Storage Bucket used for Cloud Function source code. |
+| <a name="output_files"></a> [files](#output\_files) | The archive file uploaded to the Google Storage Bucket. |
+| <a name="output_function"></a> [function](#output\_function) | The Cloud Function resource created by the module. |
+| <a name="output_job"></a> [job](#output\_job) | The Cloud Scheduler job that triggers the Cloud Function. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Role and Permissions
@@ -120,7 +120,6 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "cloudscheduler.jobs.enable",
     "cloudscheduler.jobs.get",
     "cloudscheduler.jobs.update",
-    "resourcemanager.projects.get",
     "run.services.getIamPolicy",
     "run.services.setIamPolicy",
     "storage.objects.create",
@@ -154,7 +153,7 @@ Please use the [issue tracker](https://github.com/jameswoolfenden/terraform-gcp-
 
 ## Copyrights
 
-Copyright © 2019-2023 James Woolfenden
+Copyright © 2019-2026 James Woolfenden
 
 ## License
 

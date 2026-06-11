@@ -2,16 +2,16 @@
 module "function2" {
   source               = "../../"
   location             = "us-central1"
-  project              = data.google_project.project.project_id
+  project              = data.google_project.this.project_id
   source_zip_path      = data.archive_file.golang.output_path
   schedule             = "0 0 1 * *" # MONTHLY
   function_name        = "btdelete"
   entry_point          = "btDeleter" # Set the entry point
-  key_id               = "projects/${data.google_project.project.project_id}/locations/us-central1/keyRings/pangpt_kms_key_ring/cryptoKeys/pangpt_kms_crypto"
+  key_id               = google_kms_crypto_key.pike.id
   env_vars             = {}
   body                 = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
-  bucketname           = google_storage_bucket.bucket.name
-  serviceaccount_email = google_service_account.account.email
+  bucketname           = google_storage_bucket.code.name
+  serviceaccount_email = google_service_account.scheduler.email
   secrets = [{
     "key"     = "NAME"
     "secret"  = "PASSWORD"
@@ -20,13 +20,14 @@ module "function2" {
 }
 
 
-data "google_project" "project" {
+data "google_project" "this" {
   project_id = "pike-477416"
 }
 
 resource "google_kms_key_ring" "pike" {
-  location = "europe-west2"
-  name     = "pike-uk"
+  project  = data.google_project.this.project_id
+  location = "us-central1"
+  name     = "pike"
 }
 
 resource "google_kms_crypto_key" "pike" {
@@ -34,4 +35,8 @@ resource "google_kms_crypto_key" "pike" {
   key_ring        = google_kms_key_ring.pike.id
   name            = "pike"
   rotation_period = "7776000s"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

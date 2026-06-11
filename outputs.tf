@@ -1,23 +1,29 @@
 output "function" {
-  value = google_cloudfunctions2_function.function
+  value       = google_cloudfunctions2_function.core
+  description = "The Cloud Function resource created by the module."
 }
 
 output "bucket" {
-  value = var.bucketname
+  value       = var.bucketname
+  description = "The name of the Google Storage Bucket used for Cloud Function source code."
 }
 
 output "files" {
-  value = google_storage_bucket_object.archive
+  value       = google_storage_bucket_object.archive
+  description = "The archive file uploaded to the Google Storage Bucket."
 }
 
 output "job" {
-  value = google_cloud_scheduler_job.invoke_cloud_function
+  value       = google_cloud_scheduler_job.invoke_cloud_function
+  description = "The Cloud Scheduler job that triggers the Cloud Function."
 }
 
 output "auth" {
-  value = google_cloudfunctions2_function_iam_member.invoker
+  value       = google_cloudfunctions2_function_iam_member.invoker
+  description = "The IAM member that allows the Cloud Scheduler to invoke the Cloud Function."
 }
 
 output "account" {
-  value = var.serviceaccount_email
+  value       = var.serviceaccount_email
+  description = "The email of the service account used by the Cloud Function."
 }

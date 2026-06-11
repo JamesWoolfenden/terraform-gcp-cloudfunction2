@@ -1,10 +1,12 @@
-resource "google_cloudfunctions2_function" "function" {
+resource "google_cloudfunctions2_function" "core" {
   #checkov:skip=CKV_GCP_124:testdata
 
   name        = var.function_name
   location    = var.location
   project     = var.project
   description = "a new function"
+
+  kms_key_name = var.key_id
 
   build_config {
     runtime     = var.runtime
@@ -24,6 +26,8 @@ resource "google_cloudfunctions2_function" "function" {
     timeout_seconds       = var.timeout_seconds
     service_account_email = var.serviceaccount_email
     environment_variables = var.env_vars
+    vpc_connector         = var.vpc_connector
+    ingress_settings      = "ALLOW_INTERNAL_ONLY"
 
     dynamic "secret_environment_variables" {
       for_each = var.secrets
