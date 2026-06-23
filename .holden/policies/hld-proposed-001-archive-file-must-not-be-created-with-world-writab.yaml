@@ -1,0 +1,22 @@
+id: HLD_PROPOSED_001
+name: Archive file must not be created with world-writable permissions
+principle: supply-chain
+severity: MEDIUM
+rationale: |
+  archive_file resources package local source code into a zip that is later
+  uploaded as deployable artifact (e.g. Cloud Function or Lambda source). If
+  output_file_mode grants write access to group or other (for example the
+  provider's own default of "0666"), any other local user or process on the
+  machine running terraform can tamper with the archive's contents between
+  creation and upload, and the modified code will be deployed unmodified.
+remediation: |
+  Set output_file_mode to an owner-only-writable value, e.g.:
+  ```hcl
+  data "archive_file" "example" {
+    output_file_mode = "0644"
+  }
+  ```
+resources:
+  data.archive_file:
+    path: output_file_mode
+    one_of: ["0644", "0600", "0640", "0444", "0400"]

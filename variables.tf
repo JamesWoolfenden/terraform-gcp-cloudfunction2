@@ -1,5 +1,4 @@
 
-
 variable "location" {
   description = "GCP region to deploy resources."
   type        = string
@@ -127,11 +126,20 @@ variable "bucketname" {
 }
 
 variable "serviceaccount_email" {
-  description = "Email address of the service account for the function."
+  description = "Email address of the service account the Cloud Function runs as."
   type        = string
   validation {
     condition     = length(trimspace(var.serviceaccount_email)) > 0
     error_message = "The serviceaccount_email must not be empty."
+  }
+}
+
+variable "invoker_serviceaccount_email" {
+  description = "Email address of the service account authorized to invoke the Cloud Function and used as the Cloud Scheduler OIDC caller identity. Keep this distinct from serviceaccount_email so the function's runtime identity cannot also trigger itself."
+  type        = string
+  validation {
+    condition     = length(trimspace(var.invoker_serviceaccount_email)) > 0
+    error_message = "The invoker_serviceaccount_email must not be empty."
   }
 }
 variable "entry_point" {

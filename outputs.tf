@@ -25,5 +25,10 @@ output "auth" {
 
 output "account" {
   value       = var.serviceaccount_email
-  description = "The email of the service account used by the Cloud Function."
+  description = "The email of the service account the Cloud Function runs as."
+}
+
+output "invoker_account" {
+  value       = var.invoker_serviceaccount_email
+  description = "The email of the service account authorized to invoke the Cloud Function."
 }

@@ -67,6 +67,7 @@ No modules.
 | <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | Entry point symbol for the Cloud Function. | `string` | n/a | yes |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | Environment variables for the Cloud Function. | `map(any)` | n/a | yes |
 | <a name="input_function_name"></a> [function\_name](#input\_function\_name) | Name of the Cloud Function to deploy. | `string` | n/a | yes |
+| <a name="input_invoker_serviceaccount_email"></a> [invoker\_serviceaccount\_email](#input\_invoker\_serviceaccount\_email) | Email address of the service account authorized to invoke the Cloud Function and used as the Cloud Scheduler OIDC caller identity. Keep this distinct from serviceaccount\_email so the function's runtime identity cannot also trigger itself. | `string` | n/a | yes |
 | <a name="input_job_name"></a> [job\_name](#input\_job\_name) | Name of the scheduled Cloud Scheduler job. | `string` | `"invoke-btdelete"` | no |
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | KMS key identifier used for encryption or access. | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | GCP region to deploy resources. | `string` | n/a | yes |
@@ -77,7 +78,7 @@ No modules.
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Runtime environment for the Cloud Function. | `string` | `"go122"` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | Cron schedule for the Cloud Scheduler job. | `string` | `"0 0 * * *"` | no |
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | Secrets to expose to the Cloud Function. | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | n/a | yes |
-| <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | Email address of the service account for the function. | `string` | n/a | yes |
+| <a name="input_serviceaccount_email"></a> [serviceaccount\_email](#input\_serviceaccount\_email) | Email address of the service account the Cloud Function runs as. | `string` | n/a | yes |
 | <a name="input_source_zip_path"></a> [source\_zip\_path](#input\_source\_zip\_path) | Local path to the zipped source archive. | `string` | n/a | yes |
 | <a name="input_time_zone"></a> [time\_zone](#input\_time\_zone) | Time zone for the scheduler. | `string` | `"America/Los_Angeles"` | no |
 | <a name="input_timeout_seconds"></a> [timeout\_seconds](#input\_timeout\_seconds) | Maximum function execution time in seconds. | `number` | `60` | no |
@@ -87,11 +88,12 @@ No modules.
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_account"></a> [account](#output\_account) | The email of the service account used by the Cloud Function. |
+| <a name="output_account"></a> [account](#output\_account) | The email of the service account the Cloud Function runs as. |
 | <a name="output_auth"></a> [auth](#output\_auth) | The IAM member that allows the Cloud Scheduler to invoke the Cloud Function. |
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | The name of the Google Storage Bucket used for Cloud Function source code. |
 | <a name="output_files"></a> [files](#output\_files) | The archive file uploaded to the Google Storage Bucket. |
 | <a name="output_function"></a> [function](#output\_function) | The Cloud Function resource created by the module. |
+| <a name="output_invoker_account"></a> [invoker\_account](#output\_invoker\_account) | The email of the service account authorized to invoke the Cloud Function. |
 | <a name="output_job"></a> [job](#output\_job) | The Cloud Scheduler job that triggers the Cloud Function. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

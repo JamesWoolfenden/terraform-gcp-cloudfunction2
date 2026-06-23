@@ -12,6 +12,8 @@ module "function2" {
   body                 = base64encode(jsonencode({ "projectid" : "pangpt", "instanceid" : "pangpt", "tableid" : "pangpt", "filter" : ".*chat_histories$", "days" : "90", "dryrun" : true }))
   bucketname           = google_storage_bucket.code.name
   serviceaccount_email = google_service_account.scheduler.email
+  # Reusing the same SA for both roles here only because this example has no second SA to demonstrate with.
+  invoker_serviceaccount_email = google_service_account.scheduler.email
   secrets = [{
     "key"     = "NAME"
     "secret"  = "PASSWORD"

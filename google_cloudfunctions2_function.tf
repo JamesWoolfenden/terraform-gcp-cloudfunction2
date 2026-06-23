@@ -1,5 +1,4 @@
 resource "google_cloudfunctions2_function" "core" {
-  #checkov:skip=CKV_GCP_124:testdata
 
   name        = var.function_name
   location    = var.location
@@ -21,7 +20,7 @@ resource "google_cloudfunctions2_function" "core" {
 
   service_config {
     min_instance_count    = var.min_instance_count
-    max_instance_count    = var.max_instance_count
+    max_instance_count    = max(coalesce(var.max_instance_count, 1), 1)
     available_memory      = var.available_memory
     timeout_seconds       = var.timeout_seconds
     service_account_email = var.serviceaccount_email
