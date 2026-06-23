@@ -1,4 +1,5 @@
 resource "google_cloudfunctions2_function" "core" {
+  # holden:ignore:HLD_GCP_287: max() of a literal floor below makes max_instance_count always >= 1; the engine can't resolve function-call expressions statically.
 
   name        = var.function_name
   location    = var.location
