@@ -1,7 +1,7 @@
 data "archive_file" "golang" {
   type             = "zip"
   source_dir       = "./code"
-  output_file_mode = "0666"
+  output_file_mode = "0644"
   output_path      = "${path.module}/go.zip"
   excludes         = [".idea"]
 }

@@ -1,5 +1,5 @@
 resource "google_cloudfunctions2_function" "core" {
-  # holden:ignore:HLD_GCP_287: max() of a literal floor below makes max_instance_count always >= 1; the engine can't resolve function-call expressions statically.
+  # holden:ignore:HLD_GCP_287: policy is scoped to google_cloudfunctions_function (v1) but the engine also matches this v2 resource; max_instance_count is set via var.max_instance_count (validated >= 1, default 1).
 
   name        = var.function_name
   location    = var.location
@@ -21,7 +21,7 @@ resource "google_cloudfunctions2_function" "core" {
 
   service_config {
     min_instance_count    = var.min_instance_count
-    max_instance_count    = max(coalesce(var.max_instance_count, 1), 1)
+    max_instance_count    = var.max_instance_count
     available_memory      = var.available_memory
     timeout_seconds       = var.timeout_seconds
     service_account_email = var.serviceaccount_email

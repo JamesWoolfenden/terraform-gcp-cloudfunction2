@@ -1,6 +1,7 @@
 output "function" {
   value       = google_cloudfunctions2_function.core
   description = "The Cloud Function resource created by the module."
+  sensitive   = true
 }
 
 output "bucket" {
@@ -11,6 +12,7 @@ output "bucket" {
 output "files" {
   value       = google_storage_bucket_object.archive
   description = "The archive file uploaded to the Google Storage Bucket."
+  sensitive   = true
 }
 
 output "job" {

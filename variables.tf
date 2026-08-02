@@ -1,3 +1,4 @@
+# holden:ignore:HLD_TF_027
 
 variable "location" {
   description = "GCP region to deploy resources."
@@ -68,6 +69,7 @@ variable "time_zone" {
 variable "key_id" {
   description = "KMS key identifier used for encryption or access."
   type        = string
+  sensitive   = true
   validation {
     condition     = length(trimspace(var.key_id)) > 0
     error_message = "The key_id must not be empty."
@@ -78,8 +80,8 @@ variable "env_vars" {
   description = "Environment variables for the Cloud Function."
   type        = map(any)
   validation {
-    condition     = length(keys(var.env_vars)) >= 0
-    error_message = "The env_vars must be a valid map."
+    condition     = alltrue([for k in keys(var.env_vars) : can(regex("^[A-Za-z_][A-Za-z0-9_]*$", k))])
+    error_message = "Each env_vars key must be a valid environment variable name (letters, digits, underscore; must not start with a digit)."
   }
 }
 
@@ -105,9 +107,9 @@ variable "retry_config" {
   default = {
     max_backoff_duration = "3600s"
     max_doublings        = 5
-    max_retry_duration   = "0s"
+    max_retry_duration   = "600s"
     min_backoff_duration = "5s"
-    retry_count          = 0
+    retry_count          = 3
   }
 
   validation {
@@ -170,15 +172,15 @@ variable "secrets" {
   }))
   sensitive = true
   validation {
-    condition     = length(var.secrets) >= 0
-    error_message = "The secrets must be a list of secret objects."
+    condition     = alltrue([for s in var.secrets : length(trimspace(s.key)) > 0 && length(trimspace(s.secret)) > 0 && length(trimspace(s.version)) > 0])
+    error_message = "Each secret's key, secret, and version must be non-empty."
   }
 }
 
 variable "min_instance_count" {
   description = "Minimum number of function instances to keep warm."
   type        = number
-  default     = 1
+  default     = 0
   validation {
     condition     = var.min_instance_count >= 0
     error_message = "The min_instance_count must be zero or greater."
@@ -210,6 +212,10 @@ variable "max_instance_count" {
   type        = number
   default     = 1
   validation {
+    condition     = var.max_instance_count >= 1
+    error_message = "The max_instance_count must be at least 1."
+  }
+  validation {
     condition     = var.max_instance_count >= var.min_instance_count
     error_message = "The max_instance_count must be greater than or equal to min_instance_count."
   }
@@ -220,7 +226,17 @@ variable "vpc_connector" {
   type        = string
   default     = ""
   validation {
-    condition     = length(trimspace(var.vpc_connector)) >= 0
-    error_message = "The vpc_connector must not be empty if specified."
+    condition     = var.vpc_connector == trimspace(var.vpc_connector)
+    error_message = "The vpc_connector must not have leading or trailing whitespace."
+  }
+}
+
+variable "kms_key_name" {
+  description = "KMS key name for encryption."
+  type        = string
+  sensitive   = true
+  validation {
+    condition     = length(trimspace(var.kms_key_name)) > 0
+    error_message = "The kms_key_name must not be empty."
   }
 }

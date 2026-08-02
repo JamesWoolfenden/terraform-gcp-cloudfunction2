@@ -1,0 +1,120 @@
+{
+  "findings": [
+    {
+      "confidence": "medium",
+      "explanation": "Originally var.serviceaccount_email was wired into the function's runtime identity, its own invoker grants, and the Scheduler OIDC caller identity all at once, collapsing the separation between 'who runs the code' and 'who is allowed to trigger it'.",
+      "file": "google_cloudfunctions2_function.tf",
+      "first_seen": "2026-06-23",
+      "fix_verified": "Commit c8491ed (\"fix: separate invoker identity from function runtime identity\") added var.invoker_serviceaccount_email, used only for the IAM invoker grants and the Scheduler OIDC token, while service_config.service_account_email keeps the original runtime SA. Verified current google_cloudfunctions2_function.tf:27 uses var.serviceaccount_email only for service_config.service_account_email, and google_cloud_scheduler_job.tf:15 / the two *_iam_member.tf files use the separate var.invoker_serviceaccount_email.",
+      "fixable": false,
+      "id": "HOLDEN_AI_001",
+      "last_seen": "2026-08-02",
+      "line": 26,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "google_cloudfunctions2_function_iam_member.invoker",
+        "google_cloud_run_service_iam_member.invoker",
+        "google_cloud_scheduler_job.invoke_cloud_function"
+      ],
+      "remediation": "N/A -- resolved.",
+      "resource": "google_cloudfunctions2_function.core",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "title": "Single service account serves as function runtime identity, invoker, and Scheduler caller identity"
+    },
+    {
+      "confidence": "high",
+      "explanation": "output_file_mode was \"0666\" (rw-rw-rw-), leaving the generated go.zip writable by any local user/process between creation and upload.",
+      "file": "example/examplea/archive.tf",
+      "first_seen": "2026-06-23",
+      "fix_verified": "output_file_mode is now \"0644\" (fixed in the /holden-best-practices session immediately prior to this scan, as HOLDEN_BP_005). Also now covered deterministically by HLD_TF_068 (imported from this finding's own suggested_policies entry back in commit c8491ed) -- holden scan example/examplea shows 0 failures for this resource.",
+      "fixable": false,
+      "id": "HOLDEN_AI_002",
+      "last_seen": "2026-08-02",
+      "line": 4,
+      "principle": "supply-chain",
+      "related_resources": [
+        "google_storage_bucket_object.archive"
+      ],
+      "remediation": "N/A -- resolved.",
+      "resource": "data.archive_file.golang",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "title": "Function source archive is built with world-writable file permissions before upload"
+    },
+    {
+      "confidence": "high",
+      "explanation": "The module now exposes invoker_serviceaccount_email specifically so callers can give the runtime SA and the invoker/Scheduler-caller SA different identities (see HOLDEN_AI_001, fixed by commit c8491ed). But the example passes google_service_account.scheduler.email for BOTH serviceaccount_email and invoker_serviceaccount_email (module.function.tf:14 and :16), with a comment admitting it: \"Reusing the same SA for both roles here only because this example has no second SA to demonstrate with.\" No deterministic rule catches this -- each binding is individually valid, and holden has no rule tying two module input variables together. Since this example is the primary reference a consumer copies from, it silently teaches the exact anti-pattern the module fix was designed to prevent: a compromised function runtime inherits self-invoke rights and is the same identity Cloud Scheduler trusts.",
+      "file": "example/examplea/module.function.tf",
+      "first_seen": "2026-08-02",
+      "fix_applied": "Added google_service_account.invoker (example/examplea/google_service_account.tf) and wired module.function2.invoker_serviceaccount_email to it instead of reusing google_service_account.scheduler (example/examplea/module.function.tf).",
+      "fixable": true,
+      "id": "HOLDEN_AI_003",
+      "last_seen": "2026-08-02",
+      "line": 14,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "google_service_account.scheduler"
+      ],
+      "remediation": "Add a second, minimal google_service_account (e.g. google_service_account.invoker) and pass its email as invoker_serviceaccount_email, leaving google_service_account.scheduler as the function's runtime SA only. The module's own google_cloudfunctions2_function_iam_member.invoker and google_cloud_run_service_iam_member.invoker resources already grant the necessary roles to whatever SA is passed in, so no other wiring is needed.",
+      "resource": "module.function2",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "title": "Example re-introduces the same shared-SA pattern that HOLDEN_AI_001 fixed at the module level"
+    },
+    {
+      "confidence": "medium",
+      "explanation": "google_kms_crypto_key.pike is referenced as the CMEK for two different GCP services: the Cloud Function's own kms_key_name (module.function.tf key_id/kms_key_name -> propagated into google_cloudfunctions2_function.tf and google_storage_bucket_object.archive.tf) and the bucket's encryption.default_kms_key_name (google_storage_bucket.bucket.tf:9-11). Each CMEK-consuming GCP service has its own dedicated service agent that GCP silently requires to hold cloudkms.cryptoKeyEncrypterDecrypter on the key before that service can use it. Only one grant exists -- to the Cloud Functions admin robot (service-${project_number}@gcf-admin-robot.iam.gserviceaccount.com, google_kms_crypto_key_iam_member.tf:4). There is no equivalent grant for the GCS service agent (service-${project_number}@gs-project-accounts.iam.gserviceaccount.com), which both the bucket's default_kms_key_name and google_storage_bucket_object.archive's own kms_key_name depend on. No deterministic rule catches this: it requires knowing that two different Terraform resources reference the same key for two different GCP products, each with its own undocumented-in-Terraform IAM prerequisite. Left as-is, writes to the bucket/object will fail with a KMS permission error at apply/runtime.",
+      "file": "example/examplea/google_kms_crypto_key_iam_member.tf",
+      "first_seen": "2026-08-02",
+      "fix_applied": "Added google_kms_crypto_key_iam_member.crypto_key_gcs (example/examplea/google_kms_crypto_key_iam_member.tf) granting roles/cloudkms.cryptoKeyEncrypterDecrypter to the GCS service agent on the same key.",
+      "fixable": true,
+      "id": "HOLDEN_AI_004",
+      "last_seen": "2026-08-02",
+      "line": 1,
+      "principle": "key-management",
+      "related_resources": [
+        "google_kms_crypto_key_iam_member.crypto_key",
+        "google_storage_bucket.code",
+        "module.function2"
+      ],
+      "remediation": "Add a second google_kms_crypto_key_iam_member granting roles/cloudkms.cryptoKeyEncrypterDecrypter to the GCS service agent on the same key.",
+      "resource": "google_kms_crypto_key.pike",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "title": "One KMS key backs both the function's CMEK and the GCS bucket/object CMEK, but only one of the two required service agents is granted access"
+    },
+    {
+      "confidence": "medium",
+      "explanation": "provider.google.tf carries \"# holden:ignore:HLD_GCP_059 -- per-repo WIF SA with attribute.repository scoping provides equivalent least-privilege without impersonation,\" but this repository contains no google_iam_workload_identity_pool, google_iam_workload_identity_pool_provider, or any IAM binding scoped by attribute.repository -- the exact pattern the skill's own worked example for this rule requires to justify the suppression. Separately, .pike/pike.generated_policy.tf defines google_project_iam_custom_role.terraform_pike with a specific least-privilege permission set (cloudfunctions.*, cloudscheduler.*, storage.objects.*, etc.) that reads like the intended target of that WIF principal, but it is never referenced by any google_project_iam_member/binding anywhere in this codebase -- it grants those permissions to nobody as committed. Both facts are consistent with the WIF setup living in a separate bootstrap repo not visible here (a legitimate, common pattern), which is why this is medium rather than high confidence -- but as this repo stands alone, the suppression's justification can't be verified and the custom role is dead configuration.",
+      "file": "example/examplea/provider.google.tf",
+      "first_seen": "2026-08-02",
+      "fixable": false,
+      "id": "HOLDEN_AI_005",
+      "last_seen": "2026-08-02",
+      "line": 1,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "google_project_iam_custom_role.terraform_pike"
+      ],
+      "remediation": "Either link the two: bind google_project_iam_custom_role.terraform_pike to the WIF-federated principal via a google_project_iam_member (or google_service_account_iam_member if it's a per-SA grant) in this repo, or if the WIF pool/provider genuinely lives elsewhere, note that location in the suppression comment so the claim is auditable from here. If the role is unused, remove it.",
+      "resource": "provider.google",
+      "severity": "LOW",
+      "status": "open",
+      "title": "HLD_GCP_059 suppression claims per-repo WIF scoping that isn't visible anywhere in this repository, and the least-privilege role it implies is never bound to a principal",
+      "unresolved_since": "2026-08-02"
+    }
+  ],
+  "scan_date": "2026-08-02T00:00:00Z",
+  "scan_path": ".",
+  "suggested_policies": [
+    {
+      "id": "HLD_GCP_456",
+      "pr": "https://github.com/JamesWoolfenden/holden/pull/12",
+      "rationale": "CORRECTED from initial assessment: no DSL extension was actually needed. holden already has a `requires_companion` + `linked_via` + `where` pattern for exactly this shape (CMEK-consumer resource and its service-agent IAM grant both reference the same key, matched by value rather than a direct edge), used by HLD_GCP_448 (Cloud Run) and HLD_GCP_453 (Cloud SQL). google_storage_bucket/google_storage_bucket_object had no equivalent. Implemented and shipped as HLD_GCP_456 directly instead of filing a DSL-extension request.",
+      "status": "submitted",
+      "yaml": "id: HLD_GCP_456\nname: GCS buckets and objects using CMEK must grant the GCS service agent key access\nprinciple: key-management\nseverity: HIGH\nrationale: |\n  Setting encryption.default_kms_key_name on a google_storage_bucket, or\n  kms_key_name on a google_storage_bucket_object, only tells GCS which CMEK\n  to use -- it doesn't grant access to it. Google requires the GCS service\n  agent (service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com)\n  to hold roles/cloudkms.cryptoKeyEncrypterDecrypter on that key before the\n  bucket or object can be created or written to.\nremediation: |\n  Grant the GCS service agent access to the key referenced (see PR for full HCL).\nresources:\n  google_storage_bucket:\n    filter:\n      path: encryption.default_kms_key_name\n      not_null: true\n    requires_companion:\n      type: google_kms_crypto_key_iam_member\n      linked_via:\n        from: encryption.default_kms_key_name\n        to: crypto_key_id\n      where:\n        path: role\n        equals: roles/cloudkms.cryptoKeyEncrypterDecrypter\n  google_storage_bucket_object:\n    filter:\n      path: kms_key_name\n      not_null: true\n    requires_companion:\n      type: google_kms_crypto_key_iam_member\n      linked_via:\n        from: kms_key_name\n        to: crypto_key_id\n      where:\n        path: role\n        equals: roles/cloudkms.cryptoKeyEncrypterDecrypter\n"
+    }
+  ],
+  "suggested_suppressions": []
+}

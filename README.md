@@ -70,11 +70,12 @@ No modules.
 | <a name="input_invoker_serviceaccount_email"></a> [invoker\_serviceaccount\_email](#input\_invoker\_serviceaccount\_email) | Email address of the service account authorized to invoke the Cloud Function and used as the Cloud Scheduler OIDC caller identity. Keep this distinct from serviceaccount\_email so the function's runtime identity cannot also trigger itself. | `string` | n/a | yes |
 | <a name="input_job_name"></a> [job\_name](#input\_job\_name) | Name of the scheduled Cloud Scheduler job. | `string` | `"invoke-btdelete"` | no |
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | KMS key identifier used for encryption or access. | `string` | n/a | yes |
+| <a name="input_kms_key_name"></a> [kms\_key\_name](#input\_kms\_key\_name) | KMS key name for encryption. | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | GCP region to deploy resources. | `string` | n/a | yes |
 | <a name="input_max_instance_count"></a> [max\_instance\_count](#input\_max\_instance\_count) | Maximum number of function instances. | `number` | `1` | no |
-| <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | Minimum number of function instances to keep warm. | `number` | `1` | no |
+| <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | Minimum number of function instances to keep warm. | `number` | `0` | no |
 | <a name="input_project"></a> [project](#input\_project) | GCP project ID. | `string` | n/a | yes |
-| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | Retry configuration for Cloud Scheduler. | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "0s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 0<br/>}</pre> | no |
+| <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | Retry configuration for Cloud Scheduler. | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "600s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 3<br/>}</pre> | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Runtime environment for the Cloud Function. | `string` | `"go122"` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | Cron schedule for the Cloud Scheduler job. | `string` | `"0 0 * * *"` | no |
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | Secrets to expose to the Cloud Function. | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | n/a | yes |
@@ -103,7 +104,7 @@ No modules.
 The Terraform resource required is:
 
 ```golang
-
+# apply role
 resource "google_project_iam_custom_role" "terraform_pike" {
   project     = "pike-477416"
   role_id     = "terraform_pike"
@@ -127,6 +128,22 @@ resource "google_project_iam_custom_role" "terraform_pike" {
     "storage.objects.create",
     "storage.objects.delete",
     "storage.objects.get",
+    "storage.objects.list"
+  ]
+}
+
+# plan role
+resource "google_project_iam_custom_role" "terraform_pike_plan" {
+  project     = "pike-477416"
+  role_id     = "terraform_pike_plan"
+  title       = "terraform_pike_plan"
+  description = "A user with least privileges"
+  permissions = [
+    "cloudfunctions.functions.get",
+    "cloudfunctions.functions.getIamPolicy",
+    "cloudfunctions.operations.get",
+    "cloudscheduler.jobs.get",
+    "run.services.getIamPolicy",
     "storage.objects.list"
   ]
 }
