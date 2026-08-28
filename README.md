@@ -50,9 +50,11 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
+| [google_cloud_run_service_iam_binding.invokers](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service_iam_binding) | resource |
 | [google_cloud_run_service_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service_iam_member) | resource |
 | [google_cloud_scheduler_job.invoke_cloud_function](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_scheduler_job) | resource |
 | [google_cloudfunctions2_function.core](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function) | resource |
+| [google_cloudfunctions2_function_iam_binding.viewers](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_binding) | resource |
 | [google_cloudfunctions2_function_iam_member.invoker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions2_function_iam_member) | resource |
 | [google_storage_bucket_object.archive](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
 | [random_string.name](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
@@ -67,6 +69,7 @@ No modules.
 | <a name="input_entry_point"></a> [entry\_point](#input\_entry\_point) | Entry point symbol for the Cloud Function. | `string` | n/a | yes |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | Environment variables for the Cloud Function. | `map(any)` | n/a | yes |
 | <a name="input_function_name"></a> [function\_name](#input\_function\_name) | Name of the Cloud Function to deploy. | `string` | n/a | yes |
+| <a name="input_function_viewers"></a> [function\_viewers](#input\_function\_viewers) | Principals granted roles/cloudfunctions.viewer on the function, authoritatively for that role. Empty to create no binding | `list(string)` | `[]` | no |
 | <a name="input_invoker_serviceaccount_email"></a> [invoker\_serviceaccount\_email](#input\_invoker\_serviceaccount\_email) | Email address of the service account authorized to invoke the Cloud Function and used as the Cloud Scheduler OIDC caller identity. Keep this distinct from serviceaccount\_email so the function's runtime identity cannot also trigger itself. | `string` | n/a | yes |
 | <a name="input_job_name"></a> [job\_name](#input\_job\_name) | Name of the scheduled Cloud Scheduler job. | `string` | `"invoke-btdelete"` | no |
 | <a name="input_key_id"></a> [key\_id](#input\_key\_id) | KMS key identifier used for encryption or access. | `string` | n/a | yes |
@@ -76,6 +79,7 @@ No modules.
 | <a name="input_min_instance_count"></a> [min\_instance\_count](#input\_min\_instance\_count) | Minimum number of function instances to keep warm. | `number` | `0` | no |
 | <a name="input_project"></a> [project](#input\_project) | GCP project ID. | `string` | n/a | yes |
 | <a name="input_retry_config"></a> [retry\_config](#input\_retry\_config) | Retry configuration for Cloud Scheduler. | <pre>object({<br/>    max_backoff_duration = string<br/>    max_doublings        = number<br/>    max_retry_duration   = string<br/>    min_backoff_duration = string<br/>    retry_count          = number<br/>  })</pre> | <pre>{<br/>  "max_backoff_duration": "3600s",<br/>  "max_doublings": 5,<br/>  "max_retry_duration": "600s",<br/>  "min_backoff_duration": "5s",<br/>  "retry_count": 3<br/>}</pre> | no |
+| <a name="input_run_invokers"></a> [run\_invokers](#input\_run\_invokers) | Principals granted roles/run.invoker on the function's underlying Cloud Run service, authoritatively for that role. Empty to create no binding | `list(string)` | `[]` | no |
 | <a name="input_runtime"></a> [runtime](#input\_runtime) | Runtime environment for the Cloud Function. | `string` | `"go122"` | no |
 | <a name="input_schedule"></a> [schedule](#input\_schedule) | Cron schedule for the Cloud Scheduler job. | `string` | `"0 0 * * *"` | no |
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | Secrets to expose to the Cloud Function. | <pre>list(object({<br/>    key     = string<br/>    secret  = string<br/>    version = string<br/>  }))</pre> | n/a | yes |

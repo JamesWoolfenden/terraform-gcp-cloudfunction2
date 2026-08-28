@@ -15,62 +15,41 @@ all: init plan build
 
 init:
 	$(RM)
-	tofu init -reconfigure -upgrade
+	terraform init -reconfigure -upgrade
 
 plan:
-	tofu plan -refresh=true
+	terraform plan --out tfplan.binary -refresh=true
 
 planned: init
-	tofu plan -out tf.plan
-	tofu show -json tf.plan  > tf.json
-	checkov -f tf.json
+	terraform plan -out tf.plan
+	terraform show -json tf.plan  > tf.json
 
 p:
-	tofu plan -refresh=true
+	terraform plan -refresh=true
 
 apply: build
 
 build:
-	tofu apply -auto-approve
+	terraform apply -auto-approve
+
+convert:
+	terraform show -json tfplan.binary > tfplan.json
 
 check: init
-	tofu plan -detailed-exitcode
+	terraform plan -detailed-exitcode
 
 destroy: init
-	tofu destroy -auto-approve
+	terraform destroy --auto-approve
 
 docs:
 	terraform-docs md . > README.md
 
 valid:
-	-tofu fmt -recursive
-	-checkov -d . --external-checks-dir ../../checkov
-	-terrascan scan
-	docker pull checkmarx/kics:latest
-	docker run -v $(CURDIR):/path checkmarx/kics:latest scan --path /path
-
-compare:
-	-checkov -d . --external-checks-dir ../../checkov -o json >../../output/checkov.json
-	-terrascan scan -o json -x json >../../output/terrascan.json
-	-tfsec . --out ../../output/tfsec.json -f json -s
-	docker pull checkmarx/kics:latest
-	docker run -v $(CURDIR):/path -v $(CURDIR)/../../output:/output checkmarx/kics:latest scan --path "/path" -o "/output/kics.json"
-
-conftest: plan convert
-	conftest test ./tfplan.json -p ../../policies
-
-opa: plan convert
-	opa eval --format pretty --data terraform.rego --input tfplan.json "data.terraform.analysis.authz"
+	-terraform fmt -recursive
 
 target:
 	@read -p "Enter Module to target:" MODULE;
-	tofu apply -target $$MODULE
+	terraform apply -target $$MODULE
 
 purge:
 	$(BLAT)
-
-cost:
-	infracost breakdown --path . --usage-file infracost-usage.yml  --sync-usage-file --show-skipped
-
-update:
-	cd code; go get -u

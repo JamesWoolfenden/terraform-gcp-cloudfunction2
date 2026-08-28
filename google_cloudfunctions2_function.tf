@@ -1,6 +1,4 @@
 resource "google_cloudfunctions2_function" "core" {
-  # holden:ignore:HLD_GCP_287: policy is scoped to google_cloudfunctions_function (v1) but the engine also matches this v2 resource; max_instance_count is set via var.max_instance_count (validated >= 1, default 1).
-
   name        = var.function_name
   location    = var.location
   project     = var.project

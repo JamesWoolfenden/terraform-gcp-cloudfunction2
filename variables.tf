@@ -240,3 +240,25 @@ variable "kms_key_name" {
     error_message = "The kms_key_name must not be empty."
   }
 }
+
+variable "function_viewers" {
+  type        = list(string)
+  description = "Principals granted roles/cloudfunctions.viewer on the function, authoritatively for that role. Empty to create no binding"
+  default     = []
+
+  validation {
+    condition     = !anytrue([for m in var.function_viewers : contains(["allUsers", "allAuthenticatedUsers"], m)])
+    error_message = "var.function_viewers must not contain allUsers or allAuthenticatedUsers"
+  }
+}
+
+variable "run_invokers" {
+  type        = list(string)
+  description = "Principals granted roles/run.invoker on the function's underlying Cloud Run service, authoritatively for that role. Empty to create no binding"
+  default     = []
+
+  validation {
+    condition     = !anytrue([for m in var.run_invokers : contains(["allUsers", "allAuthenticatedUsers"], m)])
+    error_message = "var.run_invokers must not contain allUsers or allAuthenticatedUsers"
+  }
+}

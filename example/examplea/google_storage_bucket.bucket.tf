@@ -26,4 +26,6 @@ resource "google_storage_bucket" "code" {
       type = "Delete"
     }
   }
+
+  depends_on = [google_kms_crypto_key_iam_member.crypto_key_gcs]
 }
