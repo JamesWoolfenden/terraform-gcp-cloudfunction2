@@ -36,5 +36,3 @@ resource "google_kms_key_ring" "pike" {
   location = "us-central1"
   name     = "pike"
 }
-
-

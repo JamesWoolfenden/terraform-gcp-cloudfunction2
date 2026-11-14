@@ -1,4 +1,5 @@
 {
+  "category": "all",
   "findings": [
     {
       "confidence": "medium",
@@ -124,48 +125,48 @@
       "status": "fixed"
     },
     {
-      "id": "HOLDEN_AI_007",
-      "status": "open",
-      "first_seen": "2026-11-14",
-      "last_seen": "2026-11-14",
-      "unresolved_since": "2026-11-14",
-      "suppression_reason": null,
-      "principle": "maintainability",
-      "severity": "INFO",
       "confidence": "high",
-      "title": "Two variables (key_id, kms_key_name) carry the same CMEK key and can silently diverge",
+      "explanation": "The function uses var.key_id for kms_key_name while the source archive object (google_storage_bucket_object.archive.tf:5) uses var.kms_key_name. The example passes the same key to both, but nothing enforces it; a caller passing different keys would need grants on two keys and get inconsistent CMEK coverage. holden has no rule relating two module variables.",
       "file": "google_cloudfunctions2_function.tf",
+      "first_seen": "2026-11-14",
+      "fixable": false,
+      "id": "HOLDEN_AI_007",
+      "last_seen": "2026-11-14",
       "line": 1,
-      "resource": "google_cloudfunctions2_function.core",
+      "principle": "maintainability",
       "related_resources": [
         "google_storage_bucket_object.archive",
         "variable.key_id",
         "variable.kms_key_name"
       ],
-      "explanation": "The function uses var.key_id for kms_key_name while the source archive object (google_storage_bucket_object.archive.tf:5) uses var.kms_key_name. The example passes the same key to both, but nothing enforces it; a caller passing different keys would need grants on two keys and get inconsistent CMEK coverage. holden has no rule relating two module variables.",
       "remediation": "Collapse to a single variable (a breaking change for consumers, so do it in a major release), or have one default to the other.",
-      "fixable": false
+      "resource": "google_cloudfunctions2_function.core",
+      "severity": "INFO",
+      "status": "open",
+      "suppression_reason": null,
+      "title": "Two variables (key_id, kms_key_name) carry the same CMEK key and can silently diverge",
+      "unresolved_since": "2026-11-14"
     },
     {
-      "id": "HOLDEN_AI_008",
-      "status": "open",
-      "first_seen": "2026-11-14",
-      "last_seen": "2026-11-14",
-      "unresolved_since": "2026-11-14",
-      "suppression_reason": null,
-      "principle": "reliability",
-      "severity": "LOW",
       "confidence": "medium",
-      "title": "Example bucket name is built from the project display name, not the project ID",
+      "explanation": "name = \"${data.google_project.this.name}-lambdacode-bucket\" uses google_project.name, the free-form display name, which may contain spaces, capitals or characters invalid in bucket names, and is not unique. It works only if the display name happens to be bucket-safe. Changing it later forces bucket replacement. Assumption: display name unknown from the code.",
       "file": "example/examplea/google_storage_bucket.bucket.tf",
+      "first_seen": "2026-11-14",
+      "fixable": false,
+      "id": "HOLDEN_AI_008",
+      "last_seen": "2026-11-14",
       "line": 2,
-      "resource": "google_storage_bucket.code",
+      "principle": "reliability",
       "related_resources": [
         "data.google_project.this"
       ],
-      "explanation": "name = \"${data.google_project.this.name}-lambdacode-bucket\" uses google_project.name, the free-form display name, which may contain spaces, capitals or characters invalid in bucket names, and is not unique. It works only if the display name happens to be bucket-safe. Changing it later forces bucket replacement. Assumption: display name unknown from the code.",
       "remediation": "Use data.google_project.this.project_id (globally unique and bucket-safe) when next creating the bucket.",
-      "fixable": false
+      "resource": "google_storage_bucket.code",
+      "severity": "LOW",
+      "status": "open",
+      "suppression_reason": null,
+      "title": "Example bucket name is built from the project display name, not the project ID",
+      "unresolved_since": "2026-11-14"
     }
   ],
   "scan_date": "2026-11-14T00:00:00Z",
@@ -188,30 +189,29 @@
   ],
   "suggested_suppressions": [],
   "unresolved_review": {
-    "reviewed": 3,
-    "resolved_to_finding": 0,
-    "resolved_to_confirmed_safe": 3,
-    "genuinely_unresolvable": 0,
     "detail": [
       {
         "policy_id": "HLD_GCP_210",
+        "reason": "In the example, members = invoker SA (a freshly declared google_service_account.invoker) plus var.run_invokers, which the example leaves at its default []. Cannot be a default/built-in SA there. For other consumers run_invokers is caller-controlled.",
         "resource": "module.function2.google_cloud_run_service_iam_binding.invokers",
-        "verdict": "confirmed-safe",
-        "reason": "In the example, members = invoker SA (a freshly declared google_service_account.invoker) plus var.run_invokers, which the example leaves at its default []. Cannot be a default/built-in SA there. For other consumers run_invokers is caller-controlled."
+        "verdict": "confirmed-safe"
       },
       {
         "policy_id": "HLD_GCP_023",
+        "reason": "variables.tf validation on var.run_invokers rejects allUsers and allAuthenticatedUsers, so the binding cannot be public.",
         "resource": "module.function2.google_cloud_run_service_iam_binding.invokers",
-        "verdict": "confirmed-safe",
-        "reason": "variables.tf validation on var.run_invokers rejects allUsers and allAuthenticatedUsers, so the binding cannot be public."
+        "verdict": "confirmed-safe"
       },
       {
         "policy_id": "HLD_GCP_210",
+        "reason": "member resolves to google_service_account.invoker.email, a custom SA created in the example.",
         "resource": "module.function2.google_cloudfunctions2_function_iam_member.invoker",
-        "verdict": "confirmed-safe",
-        "reason": "member resolves to google_service_account.invoker.email, a custom SA created in the example."
+        "verdict": "confirmed-safe"
       }
-    ]
-  },
-  "category": "all"
+    ],
+    "genuinely_unresolvable": 0,
+    "resolved_to_confirmed_safe": 3,
+    "resolved_to_finding": 0,
+    "reviewed": 3
+  }
 }
