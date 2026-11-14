@@ -1,3 +1,4 @@
+# holden:ignore:HLD_GCP_295: google_cloud_run_service_iam_binding.invokers grants roles/run.invoker to this OIDC identity.
 resource "google_cloud_scheduler_job" "invoke_cloud_function" {
   name        = var.job_name
   description = "Schedule the HTTPS trigger for cloud function"

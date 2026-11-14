@@ -1,4 +1,4 @@
-# holden:ignore:HLD_TF_004
+# holden:ignore:HLD_TF_004: its sample for example
 terraform {
   required_providers {
 
@@ -8,7 +8,7 @@ terraform {
     }
     google = {
       source  = "hashicorp/google"
-      version = "7.31.0"
+      version = "7.42.0"
     }
     random = {
       source  = "hashicorp/random"

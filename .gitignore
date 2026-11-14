@@ -3,6 +3,10 @@
 *.tfstate.backup
 *.zip
 .DS_Store
+# Module root lock file — this repo is a reusable module, not a root config,
+# so provider pinning belongs to callers/examples, not here. Example/template
+# lock files (e.g. example/*/.terraform.lock.hcl) are intentionally kept.
+/.terraform.lock.hcl
 # Module directory
 .terraform/
 .terraform

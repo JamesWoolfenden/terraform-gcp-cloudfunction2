@@ -37,13 +37,4 @@ resource "google_kms_key_ring" "pike" {
   name     = "pike"
 }
 
-resource "google_kms_crypto_key" "pike" {
-  #checkov:skip=CKV_GCP_82:testdata
-  key_ring        = google_kms_key_ring.pike.id
-  name            = "pike"
-  rotation_period = "7776000s"
 
-  lifecycle {
-    prevent_destroy = true
-  }
-}
