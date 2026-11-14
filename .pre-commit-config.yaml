@@ -23,7 +23,7 @@ repos:
         - markdown
         - makefile
         - xml
-        exclude: binary|\.bin$
+        exclude: binary|\.bin$|(^|/)go\.(mod|sum)$
 -   repo: https://github.com/jameswoolfenden/pre-commit-shell
     rev: cb16822cc2c347707ea076fd4ede0d483fbbab47 # v1.0.7
     hooks:
