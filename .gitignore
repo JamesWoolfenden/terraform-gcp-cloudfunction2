@@ -36,3 +36,4 @@ checksums.txt
 original/
 .external_modules
 tfplan.binary
+/.terraform.lock.hcl
